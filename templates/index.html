@@ -36,16 +36,17 @@
 
             if (company && invoice && job) {
             // Show notification
-                showNotification("Entry saved to database!");
+                showNotification("Entry saved to database!", "success");
             } else {
             // Show error notification if any field is empty
-            showNotification("Please fill in all fields.");
+            showNotification("Please fill in all fields.", "error");
             }
         }
 
-        function showNotification(message) {
+        function showNotification(message, type) {
             var notification = document.getElementById("notification");
             notification.innerHTML = message;
+            notification.className = "notification " + type;
             notification.style.display = "block";
 
             // Hide the notification after 3 seconds
