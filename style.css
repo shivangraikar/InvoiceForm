@@ -10,6 +10,9 @@ body {
 
 .container {
     background-color: #fff;
+    height: 60%;
+    width: 50%;
+    max-width: 400px; /* Set a maximum width for better responsiveness */
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -18,10 +21,32 @@ body {
 form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 20px;
 }
 
 label {
     font-weight: bold;
     margin-bottom: 5px;
+}
+
+input,
+select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 8px; /* Adjusted button padding to make it smaller */
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    align-self: flex-start; /* Align the button to the start of the container */
+}
+
+button:hover {
+    background-color: #45a049;
 }
