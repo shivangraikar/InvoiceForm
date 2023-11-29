@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <form id="myForm">
+            <label for="company">Company Name:</label>
+            <input type="text" id="company" name="company" required>
+
+            <label for="invoice">Invoice Number:</label>
+            <input type="text" id="invoice" name="invoice" required>
+
+            <label for="job">Job:</label>
+            <select id="job" name="job" required>
+                <option value="option1">Option 1</option>
+                <option value="option2">Option 2</option>
+                <option value="option3">Option 3</option>
+            </select>
+
+            <button type="button" onclick="submitForm()">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        function submitForm() {
+            var company = document.getElementById("company").value;
+            var invoice = document.getElementById("invoice").value;
+            var job = document.getElementById("job").value;
+
+            // Send data to the server (you'll implement this part)
+            // Example: sendDataToServer(company, invoice, job);
+        }
+    </script>
+</body>
+</html>
