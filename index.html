@@ -16,11 +16,12 @@
             <input type="text" id="invoice" name="invoice" required>
 
             <label for="job">Job:</label>
-            <select id="job" name="job" required>
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
-                <option value="option3">Option 3</option>
-            </select>
+            <input list="jobs" id="job" name="job" required>
+            <datalist id="jobs">
+                <option value="Option 1">
+                <option value="Option 2">
+                <option value="Option 3">
+            </datalist>
 
             <button type="button" onclick="submitForm()">Submit</button>
         </form>
