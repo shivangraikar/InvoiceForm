@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice Form</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
     <div class="container">
@@ -25,6 +25,7 @@
 
             <button type="button" onclick="submitForm()">Submit</button>
         </form>
+        <div id="notification" class="notification"></div>
     </div>
 
     <script>
@@ -33,9 +34,26 @@
             var invoice = document.getElementById("invoice").value;
             var job = document.getElementById("job").value;
 
-            // Send data to the server (you'll implement this part)
-            // Example: sendDataToServer(company, invoice, job);
+            if (company && invoice && job) {
+            // Show notification
+                showNotification("Entry saved to database!");
+            } else {
+            // Show error notification if any field is empty
+            showNotification("Please fill in all fields.");
+            }
         }
+
+        function showNotification(message) {
+            var notification = document.getElementById("notification");
+            notification.innerHTML = message;
+            notification.style.display = "block";
+
+            // Hide the notification after 3 seconds
+            setTimeout(function () {
+                notification.style.display = "none";
+            }, 3000);
+        }
+
     </script>
 </body>
 </html>

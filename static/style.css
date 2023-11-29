@@ -50,3 +50,22 @@ button {
 button:hover {
     background-color: #45a049;
 }
+
+/* Styling for the notification */
+.notification {
+    display: none;
+    background-color: #f44336;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.notification.success {
+    background-color: #4caf50;
+}
+
+.notification.error {
+    background-color: #f44336;
+}
