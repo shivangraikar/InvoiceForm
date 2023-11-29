@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Invoices{% endblock %}
+
+{% block content %}
+    <h1>Invoices</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Company</th>
+                <th>Invoice</th>
+                <th>Job</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in entries %}
+                <tr>
+                    <td>{{ entry['id'] }}</td>
+                    <td>{{ entry['company'] }}</td>
+                    <td>{{ entry['invoice'] }}</td>
+                    <td>{{ entry['job'] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

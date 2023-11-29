@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, g
+from flask import Flask, render_template, request, g, redirect, url_for
 import sqlite3
 
 app = Flask(__name__)
@@ -37,6 +37,23 @@ def submit():
         db.commit()
 
         return "Form submitted successfully!"
+
+# Flask route for invoices
+@app.route('/invoices')
+def invoices():
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute('SELECT * FROM forms')
+    entries = cursor.fetchall()
+    return render_template('invoices.html', entries=entries)
+
+# Navigation bar links
+nav_links = [{'url': 'index', 'text': 'Home'}, {'url': 'invoices', 'text': 'Invoices'}]
+
+# Flask context processors to make navigation links available to all templates
+@app.context_processor
+def inject_nav_links():
+    return dict(nav_links=nav_links)
 
 if __name__ == '__main__':
     app.run(debug=True)
