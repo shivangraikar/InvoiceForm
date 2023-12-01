@@ -19,22 +19,16 @@ def close_db(e=None):
         db.close()
 
 # Function to initialize the database
-# Function to initialize the database
 def init_db():
     with app.app_context():
         db = get_db()
-        cursor = db.cursor()
-
-        # Check if the 'forms' table already exists
-        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='forms'")
-        table_exists = cursor.fetchone()
-
-        if not table_exists:
-            # If the 'forms' table doesn't exist, execute the schema script
+        try:
             with app.open_resource('schema.sql', mode='r') as f:
-                cursor.executescript(f.read())
-
+                db.cursor().executescript(f.read())
             db.commit()
+            print("Database initialized successfully.")
+        except Exception as e:
+            print(f"Error initializing database: {e}")
 
 
 # Flask route for the home page
@@ -45,17 +39,28 @@ def index():
 # Flask route to handle form submission
 @app.route('/submit', methods=['POST'])
 def submit():
+    print("Form submission reached")
     if request.method == 'POST':
+        print("POST method")
         company = request.form['company']
         invoice = request.form['invoice']
         job = request.form['job']
 
-        # Store data in the database
-        db = get_db()
-        db.execute('INSERT INTO forms (company, invoice, job) VALUES (?, ?, ?)', (company, invoice, job))
-        db.commit()
+        try:
+            # Store data in the database
+            db = get_db()
+            cursor = db.cursor()
+            cursor.execute('INSERT INTO forms (company, invoice, job) VALUES (?, ?, ?)', (company, invoice, job))
+            db.commit()
+            print("Form submitted successfully!")
+        except Exception as e:
+            print(f"Error submitting form: {e}")
 
+        print(request.form)
+        print(company, job, invoice)
+        
         return "Form submitted successfully!"
+
 
 # Flask route for invoices
 @app.route('/invoices')
