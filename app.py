@@ -129,4 +129,5 @@ def inject_nav_links():
 
 if __name__ == '__main__':
     init_db()  # Initialize the database
-    app.run(debug=True)
+    app.run(debug=False, host='0.0.0.0')
+
