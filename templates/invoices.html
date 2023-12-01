@@ -14,6 +14,7 @@
                 <th>Company</th>
                 <th>Invoice</th>
                 <th>Job</th>
+                <th>Action</th> <!-- New column for the Edit button -->
             </tr>
         </thead>
         <tbody>
@@ -23,6 +24,9 @@
                     <td>{{ entry['company'] }}</td>
                     <td>{{ entry['invoice'] }}</td>
                     <td>{{ entry['job'] }}</td>
+                    <td>
+                        <a href="{{ url_for('edit_entry', entry_id=entry.id) }}" class="btn btn-secondary">Edit</a>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>

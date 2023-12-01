@@ -116,19 +116,48 @@ button:hover {
     background-color: #f44336; /* Red background for error */
 }
 
+/* Add spacing to the table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+/* Style the Edit and Download buttons */
 .btn {
     display: inline-block;
     padding: 8px 16px;
-    margin-right: 10px;
+    margin: 4px;
+    text-align: center;
     text-decoration: none;
-    color: #fff;
-    background-color: #007bff;
-    border: 1px solid #007bff;
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border: 1px solid #4CAF50;
     border-radius: 4px;
     cursor: pointer;
 }
 
+.btn-secondary {
+    background-color: #008CBA; /* Blue */
+    border: 1px solid #008CBA;
+}
+
 .btn:hover {
-    background-color: #0056b3;
-    border-color: #0056b3;
+    background-color: #45a049;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #005F7F;
+    color: white;
 }
