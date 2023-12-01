@@ -3,7 +3,10 @@
 {% block title %}Invoices{% endblock %}
 
 {% block content %}
-    <h1>Invoices</h1>
+<a href="{{ url_for('download_csv') }}" class="btn btn-primary">Download CSV</a>
+
+<h1>INVOICES</h1>
+{% if entries %}
     <table>
         <thead>
             <tr>
@@ -24,4 +27,7 @@
             {% endfor %}
         </tbody>
     </table>
+{% else %}
+    <p>No entries found.</p>
+{% endif %}
 {% endblock %}
