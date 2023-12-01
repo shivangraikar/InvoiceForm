@@ -4,19 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice Form</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/style.css?v=1">
+
 </head>
 
 <body>
     <nav>
         <ul>
-            <li><a href="{{ url_for('index') }}">Home</a></li>
-            <li><a href="{{ url_for('invoices') }}">Invoices</a></li>
+            <li><a href="{{ url_for('index') }}">HOME</a></li>
+            <li><a href="{{ url_for('invoices') }}">INVOICES</a></li>
         </ul>
     </nav>
 
     <div class="container">
-        <form id="myForm">
+        <form id="myForm" method="post" action="{{ url_for('submit') }}">
             <label for="company">Company Name:</label>
             <input type="text" id="company" name="company" required>
 
@@ -32,37 +33,60 @@
             </datalist>
 
             <button type="button" onclick="submitForm()">Submit</button>
-        </form>
-        <div id="notification" class="notification"></div>
-    </div>
+</form>
+<div id="notification" class="notification"></div>
 
-    <script>
-        function submitForm() {
-            var company = document.getElementById("company").value;
-            var invoice = document.getElementById("invoice").value;
-            var job = document.getElementById("job").value;
+<script>
+    function submitForm() {
+        var company = document.getElementById("company").value;
+        var invoice = document.getElementById("invoice").value;
+        var job = document.getElementById("job").value;
 
-            if (company && invoice && job) {
+        if (company && invoice && job) {
             // Show notification
-                showNotification("Entry saved to database!", "success");
-            } else {
+            showNotification("Entry saved to database!", "success");
+
+            // Clear the form
+            document.getElementById("myForm").reset();
+
+            // Submit the form using AJAX
+            submitFormAjax(company, invoice, job);
+        } else {
             // Show error notification if any field is empty
             showNotification("Please fill in all fields.", "error");
+        }
+    }
+
+    function submitFormAjax(company, invoice, job) {
+        var xhr = new XMLHttpRequest();
+        var formData = new FormData();
+        formData.append('company', company);
+        formData.append('invoice', invoice);
+        formData.append('job', job);
+
+        xhr.open('POST', '/submit', true);
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // Optional: Handle response if needed
+                console.log(xhr.responseText);
             }
-        }
+        };
 
-        function showNotification(message, type) {
-            var notification = document.getElementById("notification");
-            notification.innerHTML = message;
-            notification.className = "notification " + type;
-            notification.style.display = "block";
+        xhr.send(formData);
+    }
 
-            // Hide the notification after 3 seconds
-            setTimeout(function () {
-                notification.style.display = "none";
-            }, 3000);
-        }
+    function showNotification(message, type) {
+        var notification = document.getElementById("notification");
+        notification.innerHTML = message;
+        notification.className = "notification " + type;
+        notification.style.display = "block";
 
-    </script>
+        // Hide the notification after 3 seconds
+        setTimeout(function () {
+            notification.style.display = "none";
+        }, 3000);
+    }
+</script>
 </body>
 </html>
