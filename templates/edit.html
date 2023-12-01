@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Entry</title>
+</head>
+<body>
+
+    <h2>Edit Entry</h2>
+
+    <form method="post" action="{{ url_for('edit_entry', entry_id=entry.id) }}">
+        <label for="new_company">Company:</label>
+        <input type="text" id="new_company" name="new_company" value="{{ entry.company }}" required>
+
+        <label for="new_invoice">Invoice:</label>
+        <input type="text" id="new_invoice" name="new_invoice" value="{{ entry.invoice }}" required>
+
+        <label for="new_job">Job:</label>
+        <input type="text" id="new_job" name="new_job" value="{{ entry.job }}" required>
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+
+</body>
+</html>
