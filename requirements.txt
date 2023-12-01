@@ -1,2 +1,2 @@
-Flask @ file:///home/ktietz/src/ci/flask_1611932660458/work
+Flask==1.1.2
 gunicorn==20.0.4
