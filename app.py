@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request, g, Response, redirect, url_for
 import sqlite3
+import os
 
 app = Flask(__name__)
-app.config['DATABASE'] = 'forms.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+
 
 # Function to get a database connection
 def get_db():
@@ -23,12 +25,22 @@ def init_db():
     with app.app_context():
         db = get_db()
         try:
-            with app.open_resource('schema.sql', mode='r') as f:
-                db.cursor().executescript(f.read())
-            db.commit()
+            if 'sqlite' in app.config['SQLALCHEMY_DATABASE_URI']:
+                with app.open_resource('schema.sql', mode='r') as f:
+                    db.cursor().executescript(f.read())
+            else:
+                # Handle initialization for other database backends if needed
+                # For example, you might want to use Flask-Migrate for non-SQLite databases
+                from flask_migrate import Migrate
+                migrate = Migrate(app, db)
+
+                # Run the migrations
+                migrate.upgrade()
+
             print("Database initialized successfully.")
         except Exception as e:
             print(f"Error initializing database: {e}")
+
 
 
 # Flask route for the home page
