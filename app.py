@@ -1,9 +1,7 @@
 from flask import Flask, render_template, request, g, Response, redirect, url_for
 import sqlite3
 import os
-from dotenv import load_dotenv
-
-load_dotenv()  # Load environment variables from a .env file if present
+# Load environment variables from a .env file if present
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
