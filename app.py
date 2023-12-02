@@ -1,11 +1,8 @@
 from flask import Flask, render_template, request, g, Response, redirect, url_for
 import sqlite3
-import os
-# Load environment variables from a .env file if present
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
-
+app.config['DATABASE'] = 'forms.db'
 
 # Function to get a database connection
 def get_db():
@@ -26,35 +23,181 @@ def init_db():
     with app.app_context():
         db = get_db()
         try:
-            if 'sqlite' in app.config['SQLALCHEMY_DATABASE_URI']:
-                with app.open_resource('schema.sql', mode='r') as f:
-                    db.cursor().executescript(f.read())
-            else:
-                # Handle initialization for other database backends if needed
-                # For example, you might want to use Flask-Migrate for non-SQLite databases
-                from flask_migrate import Migrate
-                migrate = Migrate(app, db)
-
-                # Run the migrations
-                migrate.upgrade()
-
+            with app.open_resource('schema.sql', mode='r') as f:
+                db.cursor().executescript(f.read())
+            db.commit()
             print("Database initialized successfully.")
         except Exception as e:
             print(f"Error initializing database: {e}")
 
 
-
 # Flask route for the home page
 @app.route('/')
 def index():
-    return render_template('index.html')
+    company_names = [
+        "21st Century Concrete-Perkins",
+        "50 Stars - Asbestos",
+        "A.R. Baldwin Crane & Hoisting Services",
+        "A9 Green/Total Green Energy Solution LLC",
+        "Accurate Glass",
+        "AFA Protective Systems, Inc.",
+        "AJM Group Inc.",
+        "American Stone Design",
+        "Anderson Porter Design Inc.",
+        "Anthony J. Perrone Masonry Contracting LLC",
+        "Architectural Fireplaces",
+        "Arlington Coal and Lumber Co. (Burlington Lumber)",
+        "Bammco Construction",
+        "Beacon Building Products",
+        "Bernkopf Goodman LLP",
+        "Boston Water and Sewer Commission",
+        "BPR Companies LLC",
+        "Breakaway Courier, Inc.",
+        "Burgess Pest Management",
+        "Burlington Lumber",
+        "Cabinet Solutions",
+        "Cambridge Police Detail Fund",
+        "Cavicchio Greenhouses",
+        "Central Steel Supply",
+        "Cesar's Concrete Pumping Inc",
+        "City Locksmith",
+        "City of Boston",
+        "City of Cambridge",
+        "City of Newton",
+        "Classic Stoneworks",
+        "CleanBasins, Inc.",
+        "CN Building Movers",
+        "Columbia Design Group LLC",
+        "Constitution Contracting",
+        "Cornerstone Landscape Supplies Inc.",
+        "Dartmouth Building Supply",
+        "Dellorco & Associates",
+        "Delmar Tree Landscaping Inc",
+        "DFI Interiors",
+        "Dileo Gas Inc.",
+        "Divine Design Center",
+        "Dnd Homes Procurement",
+        "Drago & Toscano LLP",
+        "DS Concrete Pumping Inc",
+        "Eastern Environmental Inc",
+        "EBI Consulting",
+        "Effective Waterproofing Inc.",
+        "Empire Plastering",
+        "Eversource",
+        "Favorite Green Energy",
+        "Ferguson Enterprises LLC",
+        "First Class Marble and Granite, Inc.",
+        "Flush Services LLC",
+        "Forest Structural Engineering",
+        "Frederick W. Russell, PE",
+        "Friend Building Center",
+        "GeoHydroCycle, Inc.",
+        "Golden Gutters",
+        "Green Air Solutions, LLC",
+        "Groundscapes Express, Inc.",
+        "Hancock Lumber",
+        "Hancock Survey Associates, Inc.",
+        "Horizon Forest Products",
+        "HVAC Industries Inc.",
+        "Ideal Fence Inc.",
+        "Independent Concrete Pumping Corp.",
+        "Interstate Refrigerant Recovery, Inc",
+        "J Melone & Sons, Inc.",
+        "J.G. MacLellan Concrete Co. Inc.",
+        "J.S. Donahue Landscaping",
+        "James R. Keenan Land Surveying",
+        "Jensen Hughes Inc.",
+        "Jonathan Collins",
+        "JP Cleaning Services",
+        "K. J. Miller Mechanical, Inc.",
+        "Kelly Boucher Architecture",
+        "KMM Geotechnical Consultants",
+        "KONE Inc.",
+        "Koopman Lumber Co, Inc.",
+        "Kudos Painting Inc.",
+        "LaGrasse Yanowitz & Feyl Architects",
+        "Landmark Door LLC",
+        "Larchmont Engineering & Irrigation",
+        "LEC Environmental Consultants, Inc.",
+        "Linda J Brehn",
+        "Localiq New England",
+        "Lopez Asphalt Co.",
+        "LS Fitzgerald Corp",
+        "Martins Landscaping",
+        "McKay Architects",
+        "Metro USA Fire, Inc.",
+        "MetroWest Engineering Inc",
+        "MGE Construction Corp",
+        "Mobile Fencing, Inc.",
+        "Monte French Design Studio",
+        "MV Construction & Management LLC",
+        "National Grid",
+        "Noble Work Carpentry Corp",
+        "NPC Reprographics Company",
+        "NW Pest Control Inc.",
+        "O'Malley's Overhead Door Co., Inc.",
+        "Oluna Cleaning Services",
+        "Patriot Engineering, LLC",
+        "Peter Nolan & Associates",
+        "Petersen Services Inc",
+        "Porcelanosa",
+        "Pro-Tech America",
+        "Quality Insulation & Building Products Inc.",
+        "R&D Spray Technologies",
+        "R.J. O'Connell & Associates, Inc.",
+        "Rahall's Landscaping",
+        "Ramos Finish Carpentry",
+        "Raymond F. Bouley Landscaping",
+        "RDK Architects",
+        "Reading Asphalt Corporation",
+        "Real Plan Flooring, Inc.",
+        "Reskon Group Co.",
+        "Richard's Iron Works",
+        "Rick Cooper Paving",
+        "Riemer & Braunstein LLP",
+        "RLAW, P.C.",
+        "RM Carpentry & Construction Inc",
+        "RS Framing Experts Inc",
+        "Sage Environmental, Inc.",
+        "Sarno Glass & Mirror Inc",
+        "Select Concrete Pumping Inc",
+        "ServiceMaster by Disaster Assocaites, Inc.",
+        "SERVPRO OF Allston",
+        "Sobrinho Construction Inc.",
+        "Sonny's Glass Tinting LLC",
+        "Soriano Environmental",
+        "Sox Construction Inc.",
+        "Splash - The Portland Group",
+        "Spolidoro and Sons Inc.",
+        "Spruhan Engineering, PC",
+        "TBR Excavating Inc.",
+        "Ted Riley & Co d/b/a Enviro-Safe Engineering",
+        "The Tile Shop LLC",
+        "TJ Cashman Plumbing & Heating",
+        "TJ Woods Insurance (World)",
+        "TJ Woods Insurance Agency",
+        "TN Carpentry",
+        "Town of Brookline",
+        "Town of Chelmsford",
+        "Town of Lexington",
+        "TR Cabinets Group",
+        "Tresca Brothers Concrete, Sand & Gravel",
+        "US Assure",
+        "Uticon, Inc.",
+        "Verdant Landscape Architecture",
+        "W. Galicia Landscaping",
+        "Wagon Wheel Inc.",
+        "Wesley Silva Corp",
+        "Wilmington Builders Supply Co. (Burlington Lumber)",
+        "WIN Waste Innovations",
+        "Wood & Wire Fence Co."
+    ]
+    return render_template('index.html', company_names=company_names)
 
 # Flask route to handle form submission
 @app.route('/submit', methods=['POST'])
 def submit():
-    print("Form submission reached")
     if request.method == 'POST':
-        print("POST method")
         company = request.form['company']
         invoice = request.form['invoice']
         job = request.form['job']
@@ -131,6 +274,16 @@ def edit_entry(entry_id):
         entry = cursor.fetchone()
         return render_template('edit.html', entry=entry)
 
+@app.route('/delete/<int:entry_id>', methods=['POST'])
+def delete_entry(entry_id):
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute('DELETE FROM forms WHERE id = ?', (entry_id,))
+    db.commit()
+
+    return redirect(url_for('invoices'))
+
 
 # Navigation bar links
 nav_links = [{'url': 'index', 'text': 'Home'}, {'url': 'invoices', 'text': 'Invoices'}]
@@ -142,7 +295,4 @@ def inject_nav_links():
 
 if __name__ == '__main__':
     init_db()  # Initialize the database
-    port = int(os.environ.get('PORT', 5000))
-    app.run(debug=True, port=port)
-
-
+    app.run(debug=True)

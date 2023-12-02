@@ -19,18 +19,18 @@
     <div class="container">
         <form id="myForm" method="post" action="{{ url_for('submit') }}">
             <label for="company">Company Name:</label>
-            <input type="text" id="company" name="company" required>
+            <select id="company" name="company" required>
+                <option value="" selected disabled>Select Company</option>
+                {% for company_name in company_names %}
+                    <option value="{{ company_name }}">{{ company_name }}</option>
+                {% endfor %}
+            </select>
 
             <label for="invoice">Invoice Number:</label>
             <input type="text" id="invoice" name="invoice" required>
 
             <label for="job">Job:</label>
-            <input list="jobs" id="job" name="job" required>
-            <datalist id="jobs">
-                <option value="Option 1">
-                <option value="Option 2">
-                <option value="Option 3">
-            </datalist>
+            <input type="text" id="job" name="job" required>
 
             <button type="button" onclick="submitForm()">Submit</button>
 </form>
