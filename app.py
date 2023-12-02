@@ -192,7 +192,55 @@ def index():
         "WIN Waste Innovations",
         "Wood & Wire Fence Co."
     ]
-    return render_template('index.html', company_names=company_names)
+
+    job_names = [
+        "100 Old River Road",
+    "10-12-14 Shailer St",
+    "11 Castle Rd",
+    "110-112 Hampshire Street",
+    "110-112 Litchfield St",
+    "1256 Commonwealth Ave",
+    "131 Dane Hill Rd",
+    "131-133 Fayerweather St",
+    "140 Wachusett Street",
+    "15 Tyler Rd",
+    "151-153 Babcock Street",
+    "155 Middlesex Tpke",
+    "16 Winchester Drive",
+    "161-163 Thorndike St",
+    "173 Cambridge St",
+    "18 Blueberry Ln",
+    "231-235 Third St",
+    "23-25 Jackson St",
+    "24 Blueberry Ln",
+    "24 Newtonville Ave",
+    "2-4 Soden Street",
+    "25 Normandy Rd",
+    "25-29-37 Dighton Street",
+    "31 Fairlawn Ln",
+    "32 Newtonville Ave",
+    "356-358 Western Ave",
+    "4 Revere Street",
+    "40 Kent St (40 Webster)",
+    "40 Oakmont Road",
+    "40 Winchester Dr",
+    "408-410 Western Ave",
+    "43 Laconia St",
+    "466 Putnam Avenue",
+    "490-492 Putnam Avenue",
+    "55 Green St",
+    "56 Thorndike St",
+    "560-562 Washington St",
+    "68 Freemont St",
+    "7 Spring St",
+    "8 Blueberry Ln",
+    "8 Poplar Rd",
+    "8 Winston Road",
+    "8 Winter St",
+    "85 Pleasant St",
+    "93 Brick Kiln Rd"
+    ]
+    return render_template('index.html', company_names=company_names, job_names=job_names)
 
 # Flask route to handle form submission
 @app.route('/submit', methods=['POST'])
