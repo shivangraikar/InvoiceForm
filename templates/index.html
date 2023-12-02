@@ -30,7 +30,12 @@
             <input type="text" id="invoice" name="invoice" required>
 
             <label for="job">Job:</label>
-            <input type="text" id="job" name="job" required>
+            <select id="job" name="job" required>
+                <option value="" selected disabled>Select Job</option>
+                {% for job_name in job_names %}
+                    <option value="{{ job_name }}">{{ job_name }}</option>
+                {% endfor %}
+            </select>
 
             <button type="button" onclick="submitForm()">Submit</button>
 </form>
