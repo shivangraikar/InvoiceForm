@@ -45,3 +45,7 @@ This web application allows users to submit and manage invoices. Users can fill 
 ## Contributing
 
 Contributions are welcome! If you find any issues or have suggestions, please open an [issue](https://github.com/shivangraikar/InvoiceForm/issues) or submit a [pull request](https://github.com/shivangraikar/InvoiceForm/pulls).
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
