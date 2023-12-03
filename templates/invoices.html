@@ -7,6 +7,7 @@
     <h1>INVOICES</h1>
     <a href="{{ url_for('download_csv') }}" class="btn btn-primary">Download CSV</a>
 </div>
+<div class="invoice-container"> <!-- Add a container for the invoices -->
 {% if entries %}
     <table>
         <thead>
@@ -15,7 +16,7 @@
                 <th>Company</th>
                 <th>Invoice</th>
                 <th>Job</th>
-                <th>Action</th> <!-- New column for the Edit button -->
+                <th>Action</th> <!-- New column for the Edit/Delete button -->
             </tr>
         </thead>
         <tbody>
@@ -38,4 +39,5 @@
 {% else %}
     <p>No entries found.</p>
 {% endif %}
+</div>
 {% endblock %}
