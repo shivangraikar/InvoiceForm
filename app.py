@@ -1,8 +1,14 @@
+import zipfile
 from flask import Flask, render_template, request, g, Response, redirect, url_for
-import sqlite3
+import os, sqlite3
+import uuid
+from io import BytesIO
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.config['DATABASE'] = 'forms.db'
+app.config['UPLOAD_FOLDER'] = 'uploads'  # Folder where uploaded files will be stored
+app.config['ALLOWED_EXTENSIONS'] = {'pdf'}
 
 # Function to get a database connection
 def get_db():
@@ -250,20 +256,43 @@ def submit():
         invoice = request.form['invoice']
         job = request.form['job']
 
-        try:
-            # Store data in the database
-            db = get_db()
-            cursor = db.cursor()
-            cursor.execute('INSERT INTO forms (company, invoice, job) VALUES (?, ?, ?)', (company, invoice, job))
-            db.commit()
-            print("Form submitted successfully!")
-        except Exception as e:
-            print(f"Error submitting form: {e}")
+        # Check if the 'pdfFile' key is in the request.files MultiDict
+        print(request.files)
+        if 'pdfFile' in request.files:
+            pdf_file = request.files['pdfFile']
 
-        print(request.form)
-        print(company, job, invoice)
-        
-        return "Form submitted successfully!"
+            # Generate a unique filename for the PDF using UUID
+            filename = str(uuid.uuid4()) + secure_filename(pdf_file.filename)
+
+            # Save the PDF file to a folder (create the folder if it doesn't exist)
+            upload_folder = 'uploads'
+            os.makedirs(upload_folder, exist_ok=True)
+            pdf_file.save(os.path.join(upload_folder, filename))
+
+            try:
+                # Save the entry to the database along with the new filename
+                with sqlite3.connect(app.config['DATABASE']) as conn:
+                    cursor = conn.cursor()
+                    cursor.execute('INSERT INTO forms (company, invoice, job, pdf_file) VALUES (?, ?, ?, ?)',
+                                   (company, invoice, job, filename))
+                    conn.commit()
+                    print("Form submitted successfully!")
+
+            except Exception as e:
+                print(f"Error submitting form: {e}")
+            
+            return "Form submitted successfully!"
+
+        else:
+            print('No file uploaded.')
+
+    return "Invalid request method."
+
+
+# Route to download the uploaded PDF file
+@app.route('/download/<filename>')
+def download_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
 
 
 # Flask route for invoices
@@ -275,6 +304,23 @@ def invoices():
     entries = cursor.fetchall()
     print(entries)
     return render_template('invoices.html', entries=entries)
+
+
+# Route for downloading all PDFs
+@app.route('/download_all_pdfs')
+def download_all_pdfs():
+    db = get_db()
+    cur = db.execute('SELECT id, pdf_file FROM forms')
+    pdfs = cur.fetchall()
+
+    zip_data = BytesIO()
+    with zipfile.ZipFile(zip_data, 'w') as zip_file:
+        for pdf in pdfs:
+            zip_file.writestr(f'invoice_{pdf["id"]}.pdf', pdf['pdf_file'])
+
+    zip_data.seek(0)
+    return os.sendfile(zip_data, as_attachment=True, download_name='all_invoices.zip')
+
 
 @app.route('/download_csv')
 def download_csv():
@@ -314,7 +360,6 @@ def edit_entry(entry_id):
 
         # Redirect back to the Invoices page
         return redirect(url_for('invoices'))
-
 
     else:
         # Display the edit form pre-populated with the entry's current values
