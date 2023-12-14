@@ -1,5 +1,5 @@
 import zipfile
-from flask import Flask, render_template, request, g, Response, redirect, url_for
+from flask import Flask, render_template, request, g, Response, redirect, url_for, send_file
 import os, sqlite3
 import uuid
 from io import BytesIO
@@ -316,10 +316,11 @@ def download_all_pdfs():
     zip_data = BytesIO()
     with zipfile.ZipFile(zip_data, 'w') as zip_file:
         for pdf in pdfs:
-            zip_file.writestr(f'invoice_{pdf["id"]}.pdf', pdf['pdf_file'])
+            pdf_data = BytesIO(pdf['pdf_file'].encode())  # Convert string to BytesIO
+            zip_file.writestr(f'invoice_{pdf["id"]}.pdf', pdf_data.read())
 
     zip_data.seek(0)
-    return os.sendfile(zip_data, as_attachment=True, download_name='all_invoices.zip')
+    return send_file(zip_data, as_attachment=True, attachment_filename='all_invoices.zip')
 
 
 @app.route('/download_csv')
