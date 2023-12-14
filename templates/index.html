@@ -17,7 +17,7 @@
     </nav>
 
     <div class="container">
-        <form id="myForm" method="post" action="{{ url_for('submit') }}">
+        <form id="myForm" method="post" enctype="multipart/form-data" action="{{ url_for('submit') }}">
             <label for="company">Company Name:</label>
             <select id="company" name="company" required>
                 <option value="" selected disabled>Select Company</option>
@@ -37,17 +37,22 @@
                 {% endfor %}
             </select>
 
+            <label for="pdfFile">Upload PDF:</label>
+            <input type="file" id="pdfFile" name="pdfFile" accept=".pdf" required>
+
             <button type="button" onclick="submitForm()">Submit</button>
 </form>
 <div id="notification" class="notification"></div>
+</div>
 
 <script>
     function submitForm() {
         var company = document.getElementById("company").value;
         var invoice = document.getElementById("invoice").value;
         var job = document.getElementById("job").value;
+        var pdfFile = document.getElementById("pdfFile").files[0];
 
-        if (company && invoice && job) {
+        if (company && invoice && job && pdfFile) {
             // Show notification
             showNotification("Entry saved to database!", "success");
 
@@ -55,31 +60,33 @@
             document.getElementById("myForm").reset();
 
             // Submit the form using AJAX
-            submitFormAjax(company, invoice, job);
+            submitFormAjax(company, invoice, job, pdfFile);
         } else {
             // Show error notification if any field is empty
             showNotification("Please fill in all fields.", "error");
         }
     }
 
-    function submitFormAjax(company, invoice, job) {
-        var xhr = new XMLHttpRequest();
-        var formData = new FormData();
-        formData.append('company', company);
-        formData.append('invoice', invoice);
-        formData.append('job', job);
+    function submitFormAjax(company, invoice, job, pdfFile) {
+    var xhr = new XMLHttpRequest();
+    var formData = new FormData();
+    formData.append('company', company);
+    formData.append('invoice', invoice);
+    formData.append('job', job);
+    formData.append('pdfFile', pdfFile);
 
-        xhr.open('POST', '/submit', true);
+    xhr.open('POST', '/submit', true);
 
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                // Optional: Handle response if needed
-                console.log(xhr.responseText);
-            }
-        };
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            // Optional: Handle response if needed
+            console.log(xhr.responseText);
+        }
+    };
 
-        xhr.send(formData);
-    }
+    xhr.send(formData);
+}
+
 
     function showNotification(message, type) {
         var notification = document.getElementById("notification");
