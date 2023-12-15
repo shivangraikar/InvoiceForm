@@ -310,14 +310,18 @@ def invoices():
 @app.route('/download_all_pdfs')
 def download_all_pdfs():
     db = get_db()
-    cur = db.execute('SELECT id, pdf_file FROM forms')
-    pdfs = cur.fetchall()
+    cur = db.execute('SELECT company, job, invoice, pdf_file FROM forms')
+    entries = cur.fetchall()
 
     zip_data = BytesIO()
     with zipfile.ZipFile(zip_data, 'w') as zip_file:
-        for pdf in pdfs:
-            pdf_data = BytesIO(pdf['pdf_file'].encode())  # Convert string to BytesIO
-            zip_file.writestr(f'invoice_{pdf["id"]}.pdf', pdf_data.read())
+        for entry in entries:
+            pdf_data = BytesIO(entry['pdf_file'].encode())  # Convert string to BytesIO
+
+            # Form a unique filename based on company, job, and invoice
+            filename = f'{entry["company"]}_{entry["job"]}_{entry["invoice"]}.pdf'
+            
+            zip_file.writestr(filename, pdf_data.read())
 
     zip_data.seek(0)
     return send_file(zip_data, as_attachment=True, attachment_filename='all_invoices.zip')
