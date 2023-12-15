@@ -289,12 +289,6 @@ def submit():
     return "Invalid request method."
 
 
-# Route to download the uploaded PDF file
-@app.route('/download/<filename>')
-def download_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
-
-
 # Flask route for invoices
 @app.route('/invoices')
 def invoices():
@@ -320,11 +314,12 @@ def download_all_pdfs():
 
             # Form a unique filename based on company, job, and invoice
             filename = f'{entry["company"]}_{entry["job"]}_{entry["invoice"]}.pdf'
-            
+
+            # Write the PDF data to the zip file
             zip_file.writestr(filename, pdf_data.read())
 
     zip_data.seek(0)
-    return send_file(zip_data, as_attachment=True, attachment_filename='all_invoices.zip')
+    return send_file(zip_data, as_attachment=True, attachment_filename='all_invoices.zip', mimetype='application/zip')
 
 
 @app.route('/download_csv')
