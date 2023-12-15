@@ -31,7 +31,6 @@
                         <form method="post" action="{{ url_for('delete_entry', entry_id=entry.id) }}">
                             <button type="submit" class="btn btn-edit">Delete</button>
                         </form>
-                        <a href="{{ url_for('download_file', filename=entry.pdf_file) }}" download class="btn btn-edit">Download</a>
                     </td>
                 </tr>
             {% endfor %}
